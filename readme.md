@@ -19,7 +19,7 @@ Usage: livery [options] [glob ...]
 Options:
 
   -d, --delay    Milliseconds to delay before reloading (default: `100`)
-  -p, --port     Livereload server port (default: `35729`)
+  -p, --port     LiveReload server port (default: `35729`)
   -h, --help     Output usage information
   -v, --version  Output version number
 ```
@@ -56,9 +56,7 @@ Starts a LiveReload server and watches given globs for changes. Returns the serv
 
 ```js
 const livery = require('livery');
-const { server, watcher } = livery({
-    glob: ['**/*.css', '**/*.js']
-});
+const { server, watcher } = livery(['**/*.css', '**/*.js']);
 ```
 
 ----
