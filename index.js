@@ -38,8 +38,6 @@ function livery(glob, options) {
 	glob = normalizeGlob(glob);
 	options = normalizeOptions(options);
 
-	console.log(glob, options);
-
 	const { delay, port, serverOptions, watcherOptions } = options;
 	const server = new Server(serverOptions);
 	const watcher = new Gaze(glob, watcherOptions);
