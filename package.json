@@ -1,7 +1,7 @@
 {
   "name": "livery",
-  "version": "1.0.0-alpha.1",
-  "description": "The easiest way of running code in a modern headless browser environment.",
+  "version": "1.0.0",
+  "description": "CLI to watch files and trigger a full page reload on changes with LiveReload.",
   "scripts": {
     "lint": "run-s lint-*",
     "lint-prettier": "prettier --ignore-path .gitignore --write \"**/*.js\"",
