@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+const minimist = require('minimist');
+const { version } = require('../package.json');
+const livery = require('..');
+
+const usage = `
+Usage: livery [options] [glob ...]
+       lr [options] [glob ...]
+
+Options:
+
+  -d, --delay    Milliseconds to delay before reloading (default: \`100\`)
+  -p, --port     Livereload server port (default: \`35729\`)
+  -h, --help     Output usage information
+  -v, --version  Output version number
+
+Examples:
+
+  $ lr
+  $ livery --port 34567
+  $ livery "**/*.js" "**/*.css"
+`;
+
+const options = minimist(process.argv.slice(2), {
+	alias: {
+		d: ['delay'],
+		p: ['port'],
+		h: 'help',
+		v: 'version',
+	},
+	boolean: ['help', 'version'],
+});
+
+if (options._.length) {
+	options.glob = options._;
+}
+
+function main() {
+	if (options.help) {
+		console.log(usage);
+
+		return;
+	}
+
+	if (options.version) {
+		console.log(version);
+
+		return;
+	}
+
+	livery(options);
+
+	process.stdin.pipe(process.stdout);
+}
+
+main();

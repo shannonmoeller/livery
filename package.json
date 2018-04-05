@@ -1,0 +1,80 @@
+{
+  "name": "livery",
+  "version": "1.0.0-alpha.1",
+  "description": "The easiest way of running code in a modern headless browser environment.",
+  "scripts": {
+    "lint": "run-s lint-*",
+    "lint-prettier": "prettier --ignore-path .gitignore --write \"**/*.js\"",
+    "lint-eslint": "eslint --ignore-path .gitignore --fix \"**/*.js\"",
+    "test": "nyc run-s test-*",
+    "test-node": "NODE_ENV=test blue-tape test/index.js | tap-diff",
+    "report": "nyc report -r text-lcov | coveralls",
+    "pretest": "run-s lint",
+    "precommit": "run-s test && git add .",
+    "prepublishOnly": "run-s test"
+  },
+  "keywords": [
+    "cli",
+    "live",
+    "livereload",
+    "lr",
+    "reload",
+    "server"
+  ],
+  "author": "Shannon Moeller <me@shannonmoeller> (http://shannonmoeller.com)",
+  "repository": "shannonmoeller/livery",
+  "license": "MIT",
+  "bin": {
+    "livery": "bin/livery",
+    "lr": "bin/livery"
+  },
+  "main": "index.js",
+  "files": [
+    "bin",
+    "*.js",
+    "*.md"
+  ],
+  "dependencies": {
+    "gaze": "^1.1.2",
+    "minimist": "^1.2.0",
+    "tiny-lr": "^1.1.1"
+  },
+  "devDependencies": {
+    "blue-tape": "^1.0.0",
+    "browserify": "^16.1.0",
+    "coveralls": "^3.0.0",
+    "eslint": "^4.17.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-whim": "^3.1.0",
+    "husky": "^0.14.3",
+    "npm-run-all": "^4.1.2",
+    "nyc": "^11.4.1",
+    "prettier": "^1.10.2",
+    "tap-diff": "^0.1.1"
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint-config-whim",
+      "eslint-config-prettier"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "bin/**",
+      "*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ]
+  },
+  "engines": {
+    "node": ">= 8",
+    "npm": ">= 5"
+  }
+}
