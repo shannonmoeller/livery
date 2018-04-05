@@ -1,6 +1,6 @@
 {
   "name": "livery",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CLI to watch files and trigger a full page reload on changes with LiveReload.",
   "scripts": {
     "lint": "run-s lint-*",
