@@ -32,10 +32,6 @@ const options = minimist(process.argv.slice(2), {
 	boolean: ['help', 'version'],
 });
 
-if (options._.length) {
-	options.glob = options._;
-}
-
 function main() {
 	if (options.help) {
 		console.log(usage);
@@ -49,7 +45,7 @@ function main() {
 		return;
 	}
 
-	livery(options);
+	livery(options._, options);
 
 	process.stdin.pipe(process.stdout);
 }

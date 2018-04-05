@@ -8,11 +8,16 @@ function debounce(fn, ms, timer) {
 	};
 }
 
+function normalizeGlob(glob) {
+	glob = glob && glob.length ? glob : '**/*';
+
+	return [].concat(glob, '!**/node_modules/**');
+}
+
 function normalizeOptions(options) {
 	return Object.assign(
 		{
 			delay: 100,
-			glob: '**/*',
 			port: 35729,
 		},
 		options,
@@ -29,15 +34,13 @@ function normalizeOptions(options) {
 	);
 }
 
-function livery(options) {
-	const {
-		delay,
-		glob,
-		port,
-		serverOptions,
-		watcherOptions,
-	} = normalizeOptions(options);
+function livery(glob, options) {
+	glob = normalizeGlob(glob);
+	options = normalizeOptions(options);
 
+	console.log(glob, options);
+
+	const { delay, port, serverOptions, watcherOptions } = options;
 	const server = new Server(serverOptions);
 	const watcher = new Gaze(glob, watcherOptions);
 
