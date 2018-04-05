@@ -34,16 +34,25 @@ $ livery --port 34567
 $ livery "**/*.js" "**/*.css"
 ```
 
+Works great with [`serve`](http://npm.im/serve) or [`http-server`](http://npm.im/http-server).
+
+```command
+$ lr | serve
+$ lr | hs
+```
+
 ## API
 
-### `livery(options): Object`
+### `livery([glob, [options]]): Object`
 
+- `glob` `{String|Array}` Glob patterns to watch (default: `**/*`)
 - `options` `{Object}` See [usage](#usage).
   - `delay` `{Number}` Milliseconds to delay before reloading (default: `100`)
-  - `glob` `{String|Array}` Glob patterns to watch (default: `**/*`)
   - `port` `{Number}` Livereload server port (default: `35729`)
   - `serverOptions` `{Object}` [`tiny-lr`](http://npm.im/tiny-lr) options
   - `watcherOptions` `{Object}` [`gaze`](http://npm.im/gaze) options
+
+Starts a LiveReload server and watches given globs for changes. Returns the server and the watcher instances.
 
 ```js
 const livery = require('livery');
