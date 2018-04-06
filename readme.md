@@ -2,7 +2,7 @@
 
 [![NPM version][npm-img]][npm-url] [![Downloads][downloads-img]][npm-url] [![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url]
 
-CLI to watch files and trigger a full page reload on changes with the [LiveReload](http://livereload.com/extensions/) browser extensions. Nothing fancy, just a reload.
+CLI to reload browsers when files change. You'll need the [LiveReload](http://livereload.com/extensions/) browser extensions.
 
 ## Install
 
