@@ -2,9 +2,11 @@
 
 [![NPM version][npm-img]][npm-url] [![Downloads][downloads-img]][npm-url] [![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url]
 
-CLI to reload browsers when files change. You'll need the [LiveReload](http://livereload.com/extensions/) browser extensions.
+CLI to reload browsers when files change.
 
 ## Install
+
+Install the [LiveReload](http://livereload.com/extensions/) browser extensions.
 
 ```command
 $ npm install --global livery
