@@ -1,3 +1,4 @@
+const debug = require('debug')('livery');
 const { Gaze } = require('gaze');
 const { Server } = require('tiny-lr');
 
@@ -42,14 +43,20 @@ function livery(glob, options) {
 	const server = new Server(serverOptions);
 	const watcher = new Gaze(glob, watcherOptions);
 
-	server.listen(port, () => {
-		function reload() {
-			Object.keys(server.clients).forEach((id) =>
-				server.clients[id].reload(['*'])
-			);
-		}
+	function reload() {
+		Object.keys(server.clients).forEach((id) =>
+			server.clients[id].reload(['*'])
+		);
+	}
 
+	server.listen(port, () => {
 		watcher.on('all', debounce(reload, delay));
+	});
+
+	watcher.on('error', (error) => {
+		if (process.env.DEBUG) {
+			debug(error);
+		}
 	});
 
 	return {
