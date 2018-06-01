@@ -30,7 +30,12 @@ function normalizeOptions(options) {
 				},
 				options.serverOptions
 			),
-			watcherOptions: Object.assign({}, options.watcherOptions),
+			watcherOptions: Object.assign(
+				{
+					debounceDelay: 200,
+				},
+				options.watcherOptions
+			),
 		}
 	);
 }
@@ -54,9 +59,7 @@ function livery(glob, options) {
 	});
 
 	watcher.on('error', (error) => {
-		if (process.env.DEBUG) {
-			debug(error);
-		}
+		debug(error);
 	});
 
 	return {
