@@ -1,6 +1,14 @@
-const debug = require('debug')('livery');
+const chalk = require('chalk');
 const { Gaze } = require('gaze');
 const { Server } = require('tiny-lr');
+
+function info(message) {
+	console.log(chalk`{magenta INFO:} ${message}`);
+}
+
+function error(message) {
+	console.error(chalk`{red ERROR:} ${message}`);
+}
 
 function debounce(fn, ms, timer) {
 	return (...args) => {
@@ -32,7 +40,7 @@ function normalizeOptions(options) {
 			),
 			watcherOptions: Object.assign(
 				{
-					debounceDelay: 200,
+					debounceDelay: 100,
 				},
 				options.watcherOptions
 			),
@@ -49,18 +57,21 @@ function livery(glob, options) {
 	const watcher = new Gaze(glob, watcherOptions);
 
 	function reload() {
+		info('Reloading connected clients...');
+
 		Object.keys(server.clients).forEach((id) =>
 			server.clients[id].reload(['*'])
 		);
 	}
 
 	server.listen(port, () => {
+		info(`Broadcasting reload events at http://localhost:${port}`);
+
 		watcher.on('all', debounce(reload, delay));
 	});
 
-	watcher.on('error', (error) => {
-		debug(error);
-	});
+	server.on('error', error);
+	watcher.on('error', error);
 
 	return {
 		server,
