@@ -1,6 +1,6 @@
 {
   "name": "livery",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "CLI to reload browsers when files change with LiveReload.",
   "scripts": {
     "lint": "run-s lint-*",
