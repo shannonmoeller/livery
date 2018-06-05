@@ -45,7 +45,7 @@ $ livery "**/*.js" "**/*.css"
   - `delay` `{Number}` Milliseconds to delay before reloading (default: `100`)
   - `port` `{Number}` Livereload server port (default: `35729`)
   - `serverOptions` `{Object}` [`tiny-lr`](http://npm.im/tiny-lr) options
-  - `watcherOptions` `{Object}` [`gaze`](http://npm.im/gaze) options
+  - `watcherOptions` `{Object}` [`chokidar`](http://npm.im/chokidar) options
 
 Starts a LiveReload server and watches given globs for changes. Returns the server and the watcher instances.
 
