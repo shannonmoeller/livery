@@ -63,19 +63,17 @@ function livery(glob, options) {
 	const { delay, port, serverOptions, watcherOptions } = options;
 	const server = new Server(serverOptions);
 	const watcher = chokidar.watch(glob, watcherOptions);
-	let reloadCount = 0;
 
 	function reload() {
-		const clientIds = Object.keys(server.clients);
-		const data = `clients: ${clientIds.length}, reloads: ${++reloadCount}`;
+		info(chalk`Reload emitted {gray [${new Date().toTimeString()}]}`, true);
 
-		info(`Realoding (${data})`, true);
-
-		clientIds.forEach((id) => server.clients[id].reload(['*']));
+		Object.keys(server.clients).forEach((id) =>
+			server.clients[id].reload(['*'])
+		);
 	}
 
 	server.listen(port, () => {
-		info(`Broadcasting reload events at http://localhost:${port}`);
+		info(`Emitting reload events at http://localhost:${port}`);
 
 		watcher.on('all', debounce(reload, delay));
 	});
