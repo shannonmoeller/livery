@@ -4,11 +4,13 @@ const readline = require('readline');
 const { Server } = require('tiny-lr');
 
 function info(message, update) {
+	const line = chalk`{magenta INFO:} ${message}`;
+
 	if (update) {
 		readline.cursorTo(process.stdout, 0);
-		process.stdout.write(chalk`{magenta INFO:} ${message}`);
+		process.stdout.write(line);
 	} else {
-		console.log(chalk`{magenta INFO:} ${message}`);
+		console.log(line);
 	}
 }
 
@@ -44,8 +46,9 @@ function normalizeOptions(options) {
 			),
 			watcherOptions: Object.assign(
 				{
-					awaitWriteFinish: true,
 					ignored: '**/node_modules/**',
+					ignoreInitial: true,
+					persistent: true,
 				},
 				options.watcherOptions
 			),
@@ -59,13 +62,14 @@ function livery(glob, options) {
 
 	const { delay, port, serverOptions, watcherOptions } = options;
 	const server = new Server(serverOptions);
-	const watcher = chokidar(glob, watcherOptions);
+	const watcher = chokidar.watch(glob, watcherOptions);
 	let reloadCount = 0;
 
 	function reload() {
 		const clientIds = Object.keys(server.clients);
+		const data = `clients: ${clientIds.length}, reloads: ${++reloadCount}`;
 
-		info(`clients: ${clientIds.length}, reloads: ${++reloadCount}`, true);
+		info(`Realoding (${data})`, true);
 
 		clientIds.forEach((id) => server.clients[id].reload(['*']));
 	}
