@@ -36,13 +36,6 @@ $ livery --port 34567
 $ livery "**/*.js" "**/*.css"
 ```
 
-Works great with [`serve`](http://npm.im/serve) or [`http-server`](http://npm.im/http-server).
-
-```command
-$ lr | serve
-$ lr | hs
-```
-
 ## API
 
 ### `livery([glob, [options]]): Object`
