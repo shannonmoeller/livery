@@ -1,9 +1,15 @@
 const chalk = require('chalk');
-const { Gaze } = require('gaze');
+const chokidar = require('chokidar');
+const readline = require('readline');
 const { Server } = require('tiny-lr');
 
-function info(message) {
-	console.log(chalk`{magenta INFO:} ${message}`);
+function info(message, update) {
+	if (update) {
+		readline.cursorTo(process.stdout, 0);
+		process.stdout.write(chalk`{magenta INFO:} ${message}`);
+	} else {
+		console.log(chalk`{magenta INFO:} ${message}`);
+	}
 }
 
 function error(message) {
@@ -18,9 +24,7 @@ function debounce(fn, ms, timer) {
 }
 
 function normalizeGlob(glob) {
-	glob = glob && glob.length ? glob : '**/*';
-
-	return [].concat(glob, '!**/node_modules/**');
+	return glob && glob.length ? glob : '**/*';
 }
 
 function normalizeOptions(options) {
@@ -40,7 +44,8 @@ function normalizeOptions(options) {
 			),
 			watcherOptions: Object.assign(
 				{
-					debounceDelay: 100,
+					awaitWriteFinish: true,
+					ignored: '**/node_modules/**',
 				},
 				options.watcherOptions
 			),
@@ -54,14 +59,15 @@ function livery(glob, options) {
 
 	const { delay, port, serverOptions, watcherOptions } = options;
 	const server = new Server(serverOptions);
-	const watcher = new Gaze(glob, watcherOptions);
+	const watcher = chokidar(glob, watcherOptions);
+	let reloadCount = 0;
 
 	function reload() {
-		info('Reloading connected clients...');
+		const clientIds = Object.keys(server.clients);
 
-		Object.keys(server.clients).forEach((id) =>
-			server.clients[id].reload(['*'])
-		);
+		info(`clients: ${clientIds.length}, reloads: ${++reloadCount}`, true);
+
+		clientIds.forEach((id) => server.clients[id].reload(['*']));
 	}
 
 	server.listen(port, () => {
