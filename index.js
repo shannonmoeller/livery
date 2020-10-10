@@ -75,6 +75,7 @@ export default function livery(options) {
 	watcher.on('error', console.error);
 	watcher.on('add', reload);
 	watcher.on('change', reload);
+	watcher.on('unlink', reload);
 
 	// Report
 
