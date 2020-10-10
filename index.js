@@ -66,7 +66,6 @@ export default function livery(options) {
 	// File Watcher
 
 	const watcher = chokidar.watch(glob, {
-		cwd: root,
 		ignored: '**/node_modules/**',
 		ignoreInitial: true,
 		persistent: true,
