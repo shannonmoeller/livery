@@ -36,7 +36,6 @@ Examples:
 
 ### `livery([options]): Object`
 
-- `glob` `{String|Array}` Glob patterns to watch (default: `**/*`)
 - `options` `{Object}`
   - `delay` `{Number}` Debounce delay for reloads. (default: `250`)
   - `glob` `{String|Array}` Glob or globs of files to watch. (default: `**/*.*`)
