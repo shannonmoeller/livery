@@ -1,6 +1,6 @@
 {
   "name": "livery",
-  "version": "3.1.0-0",
+  "version": "3.1.0-1",
   "description": "Minimal dev server to dispense static files.",
   "author": "Shannon Moeller <me@shannonmoeller> (http://shannonmoeller.com)",
   "repository": "shannonmoeller/livery",
