@@ -15,23 +15,21 @@ $ npm install --global livery
 ## Usage
 
 ```man
-Usage: livery [options]
-       lr [options]
+Usage: livery [options] [path]
+       lr [options] [path]
 
 Options:
   -d, --delay    Debounce delay for reloads. (default: 250)
   -g, --glob     Glob of files to watch. (default: '**/*.*')
   -h, --help     Output usage information.
   -p, --port     HTTP server port. (default: 3000)
-  -s, --spa      Single-page app. (default: false)
+  -s, --spa      Single-page app. If string, path to html. (default: false)
 
 Examples:
   $ lr
-  $ lr dist
-  $ livery --spa
-  $ livery --spa -- dist
+  $ lr src
+  $ livery --glob 'src/**/*.*' --glob 'test/**/*.js' --spa -- dist
   $ livery --delay 1000 --spa /spa.html
-  $ livery --glob 'src/**/*.*' --glob 'test/**/*.js'
 ```
 
 ## API
@@ -43,7 +41,7 @@ Examples:
   - `delay` `{Number}` Debounce delay for reloads. (default: `250`)
   - `glob` `{String|Array}` Glob or globs of files to watch. (default: `**/*.*`)
   - `port` `{Number}` HTTP server port. (default: `3000`)
-  - `spa` `{Boolean|String}` Whether to serve as a single-page app. If a string, which path to serve. (default: `false`).
+  - `spa` `{Boolean|String}` Single-page app. If string, path to html. (default: `false`).
 
 Starts an HTTP server, LiveReload server, and file watcher.
 
