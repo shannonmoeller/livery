@@ -1,22 +1,29 @@
 import http from 'http';
+import path from 'path';
 import chokidar from 'chokidar';
 import ip from 'ip';
 import send from 'send';
 import tiny from 'tiny-lr';
 
-function debounce(fn, ms = 250, timer) {
+function debounce(fn, ms) {
+	let timer;
+
 	return (...args) => {
-		timer = clearTimeout(timer);
+		clearTimeout(timer);
 		timer = setTimeout(fn, ms, ...args);
 	};
 }
 
 export default function livery(options) {
-	const { glob = '**/*.*', port = 3000, spa = false } = options || {};
+	const { delay = 250, glob = '**/*.*', port = 3000, spa } = options || {};
 	const address = ip.address();
-	const root = process.cwd();
+	const root = path.join(process.cwd(), options._[0] || '.');
+
+	// HTTP Server
 
 	const httpServer = http.createServer((req, res) => {
+		console.log(req.method, req.url);
+
 		function serveSpa(error) {
 			const isSpa =
 				spa &&
@@ -24,8 +31,9 @@ export default function livery(options) {
 				req.headers.accept.includes('html');
 
 			if (isSpa) {
-				const path = spa === true ? '/index.html' : spa;
-				send(req, path, { root }).pipe(res);
+				const url = spa === true ? '/index.html' : spa;
+
+				send(req, url, { root }).pipe(res);
 			} else {
 				res.statusCode = error.statusCode || 500;
 				res.end();
@@ -36,40 +44,47 @@ export default function livery(options) {
 	});
 
 	httpServer.on('error', console.error);
-	httpServer.listen(port, () => {
-		console.log(`http://${address}:${port}`);
-	});
+	httpServer.listen(port);
 
-	const tinyServer = new tiny.Server({
+	// LiveReload Server
+
+	const liveServer = new tiny.Server({
 		liveCSS: false,
 		liveImg: false,
 	});
 
-	tinyServer.on('error', console.error);
-	tinyServer.listen(35729, () => {
-		console.log(`http://${address}:35729`);
-	});
+	liveServer.on('error', console.error);
+	liveServer.listen(35729);
 
-	const watchServer = chokidar.watch(glob, {
+	const reload = debounce(() => {
+		console.log('RELOAD');
+		Object.keys(liveServer.clients).forEach((id) => {
+			liveServer.clients[id].reload(['*']);
+		});
+	}, delay);
+
+	// File Watcher
+
+	const watcher = chokidar.watch(glob, {
+		cwd: root,
 		ignored: '**/node_modules/**',
 		ignoreInitial: true,
 		persistent: true,
 	});
 
-	watchServer.on('error', console.error);
-	watchServer.on(
-		'all',
-		debounce(() => {
-			console.log('RELOAD');
-			Object.keys(tinyServer.clients).forEach((id) =>
-				tinyServer.clients[id].reload(['*'])
-			);
-		})
-	);
+	watcher.on('error', console.error);
+	watcher.on('add', reload);
+	watcher.on('change', reload);
+
+	// Report
+
+	console.log(`HTTP:  http://${address}:${port}`);
+	console.log(`Live:  http://${address}:35729`);
+	console.log(`Watch: ${glob}`);
 
 	return {
 		httpServer,
-		tinyServer,
-		watchServer,
+		liveServer,
+		watcher,
 	};
 }
