@@ -2,7 +2,7 @@
 
 [![NPM version][npm-img]][npm-url] [![Downloads][downloads-img]][npm-url] [![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url]
 
-CLI to reload browsers when files change.
+A simple static-file server with live reload support for development. The word itself derives from the French _livrée_, meaning _dispensed_ or _handed over_.
 
 ## Install
 
@@ -19,16 +19,18 @@ Usage: livery [options]
        lr [options]
 
 Options:
-  -g, --glob     glob of files to watch (default: \`**/*.*\`)
-  -h, --help     output usage information
-  -p, --port     http server port (default: \`3000\`)
+  -g, --glob     Glob of files to watch. (default: '**/*.*')
+  -h, --help     Output usage information.
+  -p, --port     HTTP server port. (default: 3000)
+  -s, --spa      Single-page app. (default: false)
 ```
 
 ## Examples
 
 ```command
 $ lr
-$ livery --port 8080
+$ livery --spa
+$ livery --port 8080 --spa /spa.html
 ```
 
 ## API
@@ -37,8 +39,9 @@ $ livery --port 8080
 
 - `glob` `{String|Array}` Glob patterns to watch (default: `**/*`)
 - `options` `{Object}` See [usage](#usage).
-  - `glob` `{String}` glob of files to watch (default: \`**/*.*\`)
-  - `port` `{Number}` http server port (default: \`3000\`)
+  - `glob` `{String}` Glob of files to watch. (default: `**/*.*`)
+  - `port` `{Number}` HTTP server port. (default: `3000`)
+  - `spa` `{Boolean|String}` Whether to serve as a single-page app. If a string, which path to serve. (default: `false`).
 
 Starts an http server, LiveReload server, and file watcher.
 
@@ -47,6 +50,7 @@ const livery = require('livery');
 const { httpServer, tinyServer, watchServer } = livery({
     glob: ['**/*.css', '**/*.js'],
     port: 8080,
+    spa: '/spa.html',
 });
 ```
 

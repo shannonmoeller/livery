@@ -5,13 +5,27 @@ import send from 'send';
 import tiny from 'tiny-lr';
 
 export default function livery(options) {
-	const { glob = '**/*.*', port = 3000 } = options || {};
+	const { glob = '**/*.*', port = 3000, spa = false } = options || {};
 	const address = ip.address();
 	const root = process.cwd();
 
 	const httpServer = http.createServer((req, res) => {
-		console.log(req.method, req.url);
-		send(req, req.url, { root }).pipe(res);
+		function serveSpa(error) {
+			const isSpa =
+				spa &&
+				error.statusCode === 404 &&
+				req.headers.accept.includes('html');
+
+			if (isSpa) {
+				const path = spa === true ? '/index.html' : spa;
+				send(req, path, { root }).pipe(res);
+			} else {
+				res.statusCode = error.statusCode || 500;
+				res.end();
+			}
+		}
+
+		send(req, req.url, { root }).on('error', serveSpa).pipe(res);
 	});
 
 	httpServer.on('error', console.error);
