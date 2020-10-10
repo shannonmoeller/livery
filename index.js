@@ -4,7 +4,7 @@ import ip from 'ip';
 import send from 'send';
 import tiny from 'tiny-lr';
 
-function debounce(fn, ms = 100, timer) {
+function debounce(fn, ms = 250, timer) {
 	return (...args) => {
 		timer = clearTimeout(timer);
 		timer = setTimeout(fn, ms, ...args);
