@@ -9,8 +9,7 @@ Usage: livery [options]
 
 Options:
   -g, --glob     glob of files to watch (default: \`**/*.*\`)
-  -h, --help     Output usage information
-  -l, --lr       tiny-lr server port (default: \`35729\`)
+  -h, --help     output usage information
   -p, --port     http server port (default: \`3000\`)
 `;
 
@@ -18,7 +17,6 @@ const args = minimist(process.argv, {
 	alias: {
 		g: 'glob',
 		h: 'help',
-		l: 'lr',
 		p: 'port',
 	},
 });

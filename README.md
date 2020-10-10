@@ -15,43 +15,39 @@ $ npm install --global livery
 ## Usage
 
 ```man
-Usage: livery [options] [glob ...]
-       lr [options] [glob ...]
+Usage: livery [options]
+       lr [options]
 
 Options:
-
-  -d, --delay    Milliseconds to delay before reloading (default: `100`)
-  -p, --port     LiveReload server port (default: `35729`)
-  -h, --help     Output usage information
-  -v, --version  Output version number
+  -g, --glob     glob of files to watch (default: \`**/*.*\`)
+  -h, --help     output usage information
+  -p, --port     http server port (default: \`3000\`)
 ```
 
 ## Examples
 
 ```command
 $ lr
-
-$ livery --port 34567
-
-$ livery "**/*.js" "**/*.css"
+$ livery --port 8080
 ```
 
 ## API
 
-### `livery([glob, [options]]): Object`
+### `livery([options]): Object`
 
 - `glob` `{String|Array}` Glob patterns to watch (default: `**/*`)
 - `options` `{Object}` See [usage](#usage).
-  - `delay` `{Number}` Milliseconds to delay before reloading (default: `100`)
-  - `port` `{Number}` Livereload server port (default: `35729`)
-  - `serverOptions` `{Object}` [`tiny-lr`](http://npm.im/tiny-lr) options
-  - `watcherOptions` `{Object}` [`chokidar`](http://npm.im/chokidar) options
+  - `glob` `{String}` glob of files to watch (default: \`**/*.*\`)
+  - `port` `{Number}` http server port (default: \`3000\`)
 
-Starts a LiveReload server and watches given globs for changes. Returns the server and the watcher instances.
+Starts an http server, LiveReload server, and file watcher.
 
 ```js
 const livery = require('livery');
-const { server, watcher } = livery(['**/*.css', '**/*.js']);
+const { httpServer, tinyServer, watchServer } = livery({
+    glob: ['**/*.css', '**/*.js'],
+    port: 8080,
+});
 ```
 
 ----
