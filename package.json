@@ -1,81 +1,53 @@
 {
   "name": "livery",
-  "version": "2.2.0",
-  "description": "CLI to reload browsers when files change with LiveReload.",
-  "scripts": {
-    "lint": "run-s lint-*",
-    "lint-prettier": "prettier --ignore-path .gitignore --write \"**/*.js\"",
-    "lint-eslint": "eslint --ignore-path .gitignore --fix \"**/*.js\"",
-    "test": "nyc run-s test-*",
-    "test-node": "NODE_ENV=test blue-tape test/index.js | tap-diff",
-    "report": "nyc report -r text-lcov | coveralls",
-    "pretest": "run-s lint",
-    "precommit": "run-s test && git add .",
-    "prepublishOnly": "run-s test"
-  },
+  "version": "3.0.0",
+  "description": "Minimal dev server to dispense static files.",
+  "author": "Shannon Moeller <me@shannonmoeller> (http://shannonmoeller.com)",
+  "repository": "shannonmoeller/livery",
+  "license": "MIT",
   "keywords": [
     "cli",
+    "dev",
     "live",
     "livereload",
     "lr",
     "reload",
     "server"
   ],
-  "author": "Shannon Moeller <me@shannonmoeller> (http://shannonmoeller.com)",
-  "repository": "shannonmoeller/livery",
-  "license": "MIT",
-  "bin": {
-    "livery": "bin/livery",
-    "lr": "bin/livery"
-  },
+  "type": "module",
   "main": "index.js",
-  "files": [
-    "bin",
-    "*.js",
-    "*.md"
-  ],
+  "bin": {
+    "livery": "cli.js",
+    "lr": "cli.js"
+  },
   "dependencies": {
-    "chalk": "^2.4.1",
-    "chokidar": "^2.0.3",
-    "minimist": "^1.2.0",
-    "tiny-lr": "^1.1.1"
+    "chokidar": "^3.4.2",
+    "ip": "^1.1.5",
+    "minimist": "^1.2.5",
+    "send": "^0.17.1",
+    "tiny-lr": "^2.0.0"
   },
-  "devDependencies": {
-    "blue-tape": "^1.0.0",
-    "browserify": "^16.2.2",
-    "coveralls": "^3.0.1",
-    "eslint": "^4.19.1",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-config-whim": "^3.1.0",
-    "husky": "^0.14.3",
-    "npm-run-all": "^4.1.3",
-    "nyc": "^12.0.1",
-    "prettier": "^1.13.3",
-    "tap-diff": "^0.1.1"
-  },
-  "prettier": {
-    "arrowParens": "always",
-    "singleQuote": true,
-    "trailingComma": "es5"
+  "scripts": {
+    "lint": "npm run lint-eslint && npm run lint-prettier",
+    "lint-eslint": "npx eslint --ignore-path .gitignore --fix '**/*.js'",
+    "lint-prettier": "npx prettier --ignore-path .gitignore --write '**/*.js'"
   },
   "eslintConfig": {
     "extends": [
-      "eslint-config-whim",
-      "eslint-config-prettier"
-    ]
-  },
-  "nyc": {
-    "include": [
-      "bin/**",
-      "*.js"
+      "eslint:recommended"
     ],
-    "reporter": [
-      "lcov",
-      "text"
-    ]
+    "env": {
+      "node": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    }
+  },
+  "prettier": {
+    "singleQuote": true
   },
   "engines": {
-    "node": ">= 8",
-    "npm": ">= 5"
+    "node": ">=12.13.0"
   }
 }
