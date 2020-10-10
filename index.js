@@ -4,6 +4,13 @@ import ip from 'ip';
 import send from 'send';
 import tiny from 'tiny-lr';
 
+function debounce(fn, ms = 100, timer) {
+	return (...args) => {
+		timer = clearTimeout(timer);
+		timer = setTimeout(fn, ms, ...args);
+	};
+}
+
 export default function livery(options) {
 	const { glob = '**/*.*', port = 3000, spa = false } = options || {};
 	const address = ip.address();
@@ -50,12 +57,15 @@ export default function livery(options) {
 	});
 
 	watchServer.on('error', console.error);
-	watchServer.on('all', () => {
-		console.log('RELOAD');
-		Object.keys(tinyServer.clients).forEach((id) =>
-			tinyServer.clients[id].reload(['*'])
-		);
-	});
+	watchServer.on(
+		'all',
+		debounce(() => {
+			console.log('RELOAD');
+			Object.keys(tinyServer.clients).forEach((id) =>
+				tinyServer.clients[id].reload(['*'])
+			);
+		})
+	);
 
 	return {
 		httpServer,
