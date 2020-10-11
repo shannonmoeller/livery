@@ -1,9 +1,12 @@
 import http from 'http';
+import os from 'os';
 import path from 'path';
 import chokidar from 'chokidar';
-import ip from 'ip';
 import send from 'send';
 import tiny from 'tiny-lr';
+
+const cwd = process.cwd();
+const interfaces = os.networkInterfaces();
 
 function debounce(fn, ms) {
 	let timer;
@@ -14,10 +17,28 @@ function debounce(fn, ms) {
 	};
 }
 
-export default function livery(options) {
-	const { delay = 250, glob = '**/*.*', port = 3000, spa } = options || {};
-	const address = ip.address();
-	const root = path.join(process.cwd(), options._[0] || '.');
+function getIpAddress() {
+	const values = Object.values(interfaces).flat();
+
+	for (const { address, family, internal } of values) {
+		if (family === 'IPv4' && !internal) {
+			return address;
+		}
+	}
+}
+
+export default function livery(dir = '.', options = {}) {
+	const {
+		delay = 250,
+		httpPort = 3000,
+		livePort = 35729,
+		spa = false,
+		watch = '**/*.*',
+	} = options;
+
+	const rootPath = path.join(cwd, dir);
+	const spaPath = spa === true ? 'index.html' : spa;
+	const address = getIpAddress();
 
 	// HTTP Server
 
@@ -26,25 +47,23 @@ export default function livery(options) {
 
 		function serveSpa(error) {
 			const isSpa =
-				spa &&
+				spaPath &&
 				error.statusCode === 404 &&
 				req.headers.accept.includes('html');
 
 			if (isSpa) {
-				const url = spa === true ? '/index.html' : spa;
-
-				send(req, url, { root }).pipe(res);
+				send(req, spaPath, { root: rootPath }).pipe(res);
 			} else {
 				res.statusCode = error.statusCode || 500;
 				res.end();
 			}
 		}
 
-		send(req, req.url, { root }).on('error', serveSpa).pipe(res);
+		send(req, req.url, { root: rootPath }).on('error', serveSpa).pipe(res);
 	});
 
 	httpServer.on('error', console.error);
-	httpServer.listen(port);
+	httpServer.listen(httpPort);
 
 	// LiveReload Server
 
@@ -54,37 +73,36 @@ export default function livery(options) {
 	});
 
 	liveServer.on('error', console.error);
-	liveServer.listen(35729);
+	liveServer.listen(livePort);
 
-	const reload = debounce(() => {
+	function reload() {
 		console.log('RELOAD');
-		Object.keys(liveServer.clients).forEach((id) => {
-			liveServer.clients[id].reload(['*']);
-		});
-	}, delay);
+
+		for (const client of Object.values(liveServer.clients)) {
+			client.reload(['*']);
+		}
+	}
 
 	// File Watcher
 
-	const watcher = chokidar.watch(glob, {
+	const fileWatcher = chokidar.watch(watch, {
 		ignored: '**/node_modules/**',
 		ignoreInitial: true,
 		persistent: true,
 	});
 
-	watcher.on('error', console.error);
-	watcher.on('add', reload);
-	watcher.on('change', reload);
-	watcher.on('unlink', reload);
+	fileWatcher.on('error', console.error);
+	fileWatcher.on('all', debounce(reload, delay));
 
 	// Report
 
-	console.log(`HTTP:  http://${address}:${port}`);
-	console.log(`Live:  http://${address}:35729`);
-	console.log(`Watch: ${glob}`);
+	console.log(`HTTP Server:  http://${address}:${httpPort}`);
+	console.log(`Live Server:  http://${address}:${livePort}`);
+	console.log(`File Watcher: ${watch}`);
 
 	return {
 		httpServer,
 		liveServer,
-		watcher,
+		fileWatcher,
 	};
 }

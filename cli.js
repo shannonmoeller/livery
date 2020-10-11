@@ -4,38 +4,39 @@ import minimist from 'minimist';
 import livery from './index.js';
 
 const usage = `
-Usage: livery [options] [path]
-       lr [options] [path]
+Usage: livery [<options>] [--] [<dir>]
+       lr [<options>] [--] [<dir>]
 
 Options:
   -d, --delay    Debounce delay for reloads. (default: 250)
-  -g, --glob     Glob of files to watch. (default: '**/*.*')
   -h, --help     Output usage information.
+  -l, --live     LiveReload server port. (default: 35729)
   -p, --port     HTTP server port. (default: 3000)
   -s, --spa      Single-page app. If string, path to html. (default: false)
+  -w, --watch    Glob or globs of files to watch. (default: '**/*.*')
 
 Examples:
   $ lr
-  $ lr src
-  $ livery --glob 'src/**/*.*' --glob 'test/**/*.js' --spa -- dist
-  $ livery --delay 1000 --spa /spa.html
+  $ lr -p 8080 public
+  $ livery --watch 'src/**/*.*' --watch 'test/**/*.js' dist
+  $ livery --spa -- static
+  $ livery --spa app.html
 `;
 
 const args = minimist(process.argv.slice(2), {
 	alias: {
 		d: 'delay',
-		g: 'glob',
 		h: 'help',
-		p: 'port',
+		l: ['live', 'livePort'],
+		p: ['port', 'httpPort'],
 		s: 'spa',
+		w: 'watch',
 	},
-	boolean: ['help'],
-	string: ['glob'],
 });
 
 if (args.help) {
 	console.log(usage.trim());
 } else {
-	livery(args);
+	livery(args._[0], args);
 	process.stdin.pipe(process.stdout);
 }

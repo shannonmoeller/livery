@@ -2,7 +2,7 @@
 
 [![NPM version][npm-img]][npm-url] [![Downloads][downloads-img]][npm-url]
 
-A simple static-file server with live reload support for development. The word itself derives from the French _livrée_, meaning _dispensed_ or _handed over_.
+Minimal development server to watch and dispense static files.
 
 ## Install
 
@@ -15,42 +15,47 @@ $ npm install --global livery
 ## Usage
 
 ```man
-Usage: livery [options] [path]
-       lr [options] [path]
+Usage: livery [<options>] [--] [<dir>]
+       lr [<options>] [--] [<dir>]
 
 Options:
   -d, --delay    Debounce delay for reloads. (default: 250)
-  -g, --glob     Glob of files to watch. (default: '**/*.*')
   -h, --help     Output usage information.
+  -l, --live     LiveReload server port. (default: 35729)
   -p, --port     HTTP server port. (default: 3000)
   -s, --spa      Single-page app. If string, path to html. (default: false)
+  -w, --watch    Glob or globs of files to watch. (default: '**/*.*')
 
 Examples:
   $ lr
-  $ lr src
-  $ livery --glob 'src/**/*.*' --glob 'test/**/*.js' --spa -- dist
-  $ livery --delay 1000 --spa /spa.html
+  $ lr -p 8080 public
+  $ livery --watch 'src/**/*.*' --watch 'test/**/*.js' dist
+  $ livery --spa -- static
+  $ livery --spa app.html
 ```
 
 ## API
 
-### `livery([options]): Object`
+### `livery([dir, [options]]): Object`
 
+- `dir` `{String}` Directory of static files. (default: `.`)
 - `options` `{Object}`
   - `delay` `{Number}` Debounce delay for reloads. (default: `250`)
-  - `glob` `{String|Array}` Glob or globs of files to watch. (default: `**/*.*`)
-  - `port` `{Number}` HTTP server port. (default: `3000`)
+  - `httpPort` `{Number}` HTTP server port. (default: `3000`)
+  - `livePort` `{Number}` LiveReload server port. (default: `35729`)
   - `spa` `{Boolean|String}` Single-page app. If string, path to html. (default: `false`).
+  - `watch` `{String|Array}` Glob or globs of files to watch. (default: `**/*.*`)
 
 Starts an HTTP server, LiveReload server, and file watcher.
 
 ```js
 const livery = require('livery');
-const { httpServer, liveServer, watcher } = livery({
+const { httpServer, liveServer, fileWatcher } = livery({
     delay: 250,
-    glob: '**/*.*',
-    port: 3000,
+    httpPort: 3000,
+    livePort: 35729,
     spa: false,
+    watch: '**/*.*',
 });
 ```
 
