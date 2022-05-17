@@ -21,9 +21,9 @@
     "lr": "cli.js"
   },
   "dependencies": {
-    "chokidar": "^3.4.2",
-    "minimist": "^1.2.5",
-    "send": "^0.17.1",
+    "chokidar": "^3.5.3",
+    "minimist": "^1.2.6",
+    "send": "^0.18.0",
     "tiny-lr": "^2.0.0"
   },
   "scripts": {
