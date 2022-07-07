@@ -59,7 +59,9 @@ export default function livery(dir = '.', options = {}) {
 			}
 		}
 
-		send(req, req.url, { root: rootPath }).on('error', serveSpa).pipe(res);
+		// Parse the incoming URL to get just the pathname, so we can serve up the file
+		const urlObj = new URL(req.url, 'http://fakehost')
+		send(req, urlObj.pathname, { root: rootPath }).on('error', serveSpa).pipe(res);
 	});
 
 	httpServer.on('error', console.error);
