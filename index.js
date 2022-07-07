@@ -45,6 +45,8 @@ export default function livery(dir = '.', options = {}) {
 	const httpServer = http.createServer((req, res) => {
 		console.log(req.method, req.url);
 
+		const { pathname } = new URL(req.url, 'http://localhost');
+
 		function serveSpa(error) {
 			const isSpa =
 				spaPath &&
@@ -59,9 +61,7 @@ export default function livery(dir = '.', options = {}) {
 			}
 		}
 
-		// Parse the incoming URL to get just the pathname, so we can serve up the file
-		const urlObj = new URL(req.url, 'http://fakehost')
-		send(req, urlObj.pathname, { root: rootPath }).on('error', serveSpa).pipe(res);
+		send(req, pathname, { root: rootPath }).on('error', serveSpa).pipe(res);
 	});
 
 	httpServer.on('error', console.error);
