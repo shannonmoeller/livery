@@ -2,7 +2,7 @@
   "name": "livery",
   "version": "4.0.2",
   "description": "Minimal development server to watch and dispense static files.",
-  "author": "Shannon Moeller <me@shannonmoeller> (http://shannonmoeller.com)",
+  "author": "Shannon Moeller <me@shannonmoeller> (https://shannonmoeller.com)",
   "repository": "shannonmoeller/livery",
   "license": "MIT",
   "keywords": [
@@ -21,15 +21,15 @@
     "lr": "cli.js"
   },
   "dependencies": {
-    "chokidar": "^3.5.3",
-    "minimist": "^1.2.6",
-    "send": "^0.18.0",
+    "chokidar": "^4.0.1",
+    "minimist": "^1.2.8",
+    "send": "^1.1.0",
     "tiny-lr": "^2.0.0"
   },
   "scripts": {
     "lint": "npm run lint-eslint && npm run lint-prettier",
-    "lint-eslint": "npx eslint --ignore-path .gitignore --fix '**/*.js'",
-    "lint-prettier": "npx prettier --ignore-path .gitignore --write '**/*.js'"
+    "lint-eslint": "npx eslint@8 --ignore-path .gitignore --fix '**/*.js'",
+    "lint-prettier": "npx prettier@3 --ignore-path .gitignore --write '**/*.js'"
   },
   "eslintConfig": {
     "extends": [
